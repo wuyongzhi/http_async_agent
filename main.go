@@ -76,9 +76,9 @@ func handler(w http.ResponseWriter, req *http.Request) {
     }
 
 
-    userAgent := req.Header.Get("User-Agent")
+    userAgent := req.UserAgent()
     // 如果是代理自己的User-Agent，则可能产生无限循环了，不再处理，直接返回
-    if strings.HasPrefix(userAgent, "ZuobaoHttpAsyncAgent") {
+    if strings.HasPrefix(userAgent, UserAgent) {
         w.WriteHeader(http.StatusInternalServerError)
         w.Write([]byte(`{error: 500, message:"错误，侦测出可能出现无限循环"}`))
 
@@ -95,7 +95,8 @@ func handler(w http.ResponseWriter, req *http.Request) {
 
 
 	// 添加自定义的防止无限循环请求的头
-	req.Header.Set("User-Agent", "ZbHttpAsyncAgent")
+	req.Header.Set("User-Agent", UserAgent)
+    reqTarget.Header.Set("User-Agent", UserAgent)
 
 
     go func () {
