@@ -76,7 +76,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
     }
 
 
-    userAgent := reqTarget.Header.Get("User-Agent")
+    userAgent := req.Header.Get("User-Agent")
     // 如果是代理自己的User-Agent，则可能产生无限循环了，不再处理，直接返回
     if strings.HasPrefix(userAgent, "ZuobaoHttpAsyncAgent") {
         w.WriteHeader(http.StatusInternalServerError)
@@ -115,6 +115,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
         if writeRequestLog {
             logRequest.Printf("%s %s %s => %s", req.Method, req.URL.String(), string(bodyBytes), string(respBytes))
         }
+
 
     }()
 }
